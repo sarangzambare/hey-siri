@@ -5,69 +5,44 @@ from keras.models import Model, load_model, Sequential
 from keras.layers import Dense, Activation, Dropout, Input, Masking, TimeDistributed, LSTM, Conv1D
 from keras.layers import GRU, Bidirectional, BatchNormalization, Reshape
 from keras.optimizers import Adam
+from audio_data import graph_spectrogram
+import numpy as np
+x = graph_spectrogram("train.wav")
+
+x.shape
+
+Y = np.load('train_dir/Y.npy')
+Y_test = np.load('train_dir/Y_test.npy')
+
+train_dir = "train_dir"
+
+Y = Y.reshape(1000,1375,4)
+
+Y = Y[:200,:,:]
+Y.shape
+Y_test = Y_test.reshape(100,1375,4)
+
+def load_training_data(train_dir,num_train=1000,num_test=100):
+    X = np.zeros((num_train,101,1998))
+    X_test = np.zeros((num_test,101,1998))
+
+    for i in range(num_train):
+        X[i,:,:] = graph_spectrogram(train_dir + "/train" + str(i) + ".wav")
+
+    for i in range(num_test):
+        X_test[i,:,:] = graph_spectrogram(train_dir + "/traintest" + str(i) + ".wav")
 
 
-Tx = 5511 # The number of time steps input to the model from the spectrogram
+    return X, X_test
+
+
+X, X_test = load_training_data(train_dir,200,50)
+
+X = X.reshape(200,1998,101)
+
+Tx = 1998 # The number of time steps input to the model from the spectrogram
 n_freq = 101 # Number of frequencies input to the model at each time step of the spectrogram
-
-
-# Note that even with 10 seconds being our default training example length, 10 seconds of time can be discretized to different numbers of value. You've seen 441000 (raw audio) and 5511 (spectrogram). In the former case, each step represents $10/441000 \approx 0.000023$ seconds. In the second case, each step represents $10/5511 \approx 0.0018$ seconds.
-#
-# For the 10sec of audio, the key values you will see in this assignment are:
-#
-# - $441000$ (raw audio)
-# - $5511 = T_x$ (spectrogram output, and dimension of input to the neural network).
-# - $10000$ (used by the `pydub` module to synthesize audio)
-# - $1375 = T_y$ (the number of steps in the output of the GRU you'll build).
-#
-# Note that each of these representations correspond to exactly 10 seconds of time. It's just that they are discretizing them to different degrees. All of these are hyperparameters and can be changed (except the 441000, which is a function of the microphone). We have chosen values that are within the standard ranges uses for speech systems.
-#
-# Consider the $T_y = 1375$ number above. This means that for the output of the model, we discretize the 10s into 1375 time-intervals (each one of length $10/1375 \approx 0.0072$s) and try to predict for each of these intervals whether someone recently finished saying "activate."
-#
-# Consider also the 10000 number above. This corresponds to discretizing the 10sec clip into 10/10000 = 0.001 second itervals. 0.001 seconds is also called 1 millisecond, or 1ms. So when we say we are discretizing according to 1ms intervals, it means we are using 10,000 steps.
-#
-
-# In[16]:
-
 Ty = 1375 # The number of time steps in the output of our model
-# ## 2.1 - Build the model
-#
-# Here is the architecture we will use. Take some time to look over the model and see if it makes sense.
-#
-# <img src="images/model.png" style="width:600px;height:600px;">
-# <center> **Figure 3** </center>
-#
-# One key step of this model is the 1D convolutional step (near the bottom of Figure 3). It inputs the 5511 step spectrogram, and outputs a 1375 step output, which is then further processed by multiple layers to get the final $T_y = 1375$ step output. This layer plays a role similar to the 2D convolutions you saw in Course 4, of extracting low-level features and then possibly generating an output of a smaller dimension.
-#
-# Computationally, the 1-D conv layer also helps speed up the model because now the GRU  has to process only 1375 timesteps rather than 5511 timesteps. The two GRU layers read the sequence of inputs from left to right, then ultimately uses a dense+sigmoid layer to make a prediction for $y^{\langle t \rangle}$. Because $y$ is binary valued (0 or 1), we use a sigmoid output at the last layer to estimate the chance of the output being 1, corresponding to the user having just said "activate."
-#
-# Note that we use a uni-directional RNN rather than a bi-directional RNN. This is really important for trigger word detection, since we want to be able to detect the trigger word almost immediately after it is said. If we used a bi-directional RNN, we would have to wait for the whole 10sec of audio to be recorded before we could tell if "activate" was said in the first second of the audio clip.
-#
-
-# Implementing the model can be done in four steps:
-#
-# **Step 1**: CONV layer. Use `Conv1D()` to implement this, with 196 filters,
-# a filter size of 15 (`kernel_size=15`), and stride of 4. [[See documentation.](https://keras.io/layers/convolutional/#conv1d)]
-#
-# **Step 2**: First GRU layer. To generate the GRU layer, use:
-# ```
-# X = GRU(units = 128, return_sequences = True)(X)
-# ```
-# Setting `return_sequences=True` ensures that all the GRU's hidden states are fed to the next layer. Remember to follow this with Dropout and BatchNorm layers.
-#
-# **Step 3**: Second GRU layer. This is similar to the previous GRU layer (remember to use `return_sequences=True`), but has an extra dropout layer.
-#
-# **Step 4**: Create a time-distributed dense layer as follows:
-# ```
-# X = TimeDistributed(Dense(1, activation = "sigmoid"))(X)
-# ```
-# This creates a dense layer followed by a sigmoid, so that the parameters used for the dense layer are the same for every time step. [[See documentation](https://keras.io/layers/wrappers/).]
-#
-# **Exercise**: Implement `model()`, the architecture is presented in Figure 3.
-
-# In[42]:
-
-# GRADED FUNCTION: model
 
 def model(input_shape):
     """
@@ -85,7 +60,7 @@ def model(input_shape):
     ### START CODE HERE ###
 
     # Step 1: CONV layer (≈4 lines)
-    X = Conv1D(196, kernel_size=15, strides=4)(X_input)                                 # CONV1D
+    X = Conv1D(196, kernel_size=624, strides=1)(X_input)                                 # CONV1D
     X = BatchNormalization()(X)                                 # Batch normalization
     X = Activation('relu')(X)                                 # ReLu activation
     X = Dropout(0.8)(X)                                 # dropout (use 0.8)
@@ -102,7 +77,7 @@ def model(input_shape):
     X = Dropout(0.8)(X)                                 # dropout (use 0.8)
 
     # Step 4: Time-distributed dense layer (≈1 line)
-    X = TimeDistributed(Dense(1, activation = "sigmoid"))(X) # time distributed  (sigmoid)
+    X = TimeDistributed(Dense(4, activation = "sigmoid"))(X) # time distributed  (sigmoid)
 
     ### END CODE HERE ###
 
@@ -173,7 +148,7 @@ model.compile(loss='binary_crossentropy', optimizer=opt, metrics=["accuracy"])
 
 # In[47]:
 
-model.fit(X, Y, batch_size = 5, epochs=1)
+model.fit(X, Y, batch_size = 5, epochs=10)
 
 
 # ## 2.3 - Test the model
