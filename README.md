@@ -47,6 +47,9 @@ The 10 sec audio clips generated will be in ".wav" format. The WAV is a [**bitst
 Any time varying signal can be broken down into its frequency components, by **fourier decomposition**, which
 is the idea that any signal can be expressed as the sum of sinusoids with different frequencies.
 
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/fourier.png)
+
+
 For any sound, spectral decomposition gives us the amplitudes of each of its frequency components. For example, a section of a violin being played can be broken down like so:
 
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/violin.png)
