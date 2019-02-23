@@ -55,7 +55,7 @@ If such a decomposition is done at every time step of the audio signal and plott
 
 For example, a harp clip taken from [Chrome Music Lab: Spectrograms](https://musiclab.chromeexperiments.com/Spectrogram/), looks like so:
 
-![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/harp.png)
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/harp_400x300.png)
 
 
 
