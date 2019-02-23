@@ -23,7 +23,18 @@ The entire process has the following steps :
 
 All sounds in this project are taken from the [Google speech commands dataset](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html).
 
-The dataset has 1 sec audio samples of a host of different words, but we will only be using audio clips of the words "One", "Two" and "Three"
+The dataset has 1 sec audio samples of a host of different words, but I will only be audio clips of the words "One", "Two" and "Three" and a combination of some other random words like **"Bird", "Bed", "Happy", "House" which would be labelled as "negative"**
+
+The dataset also has various background noises, like **"Someone doing the dishes", "Cat Meowing", "Running tap"**
+
+All these sounds will be combined in various proportions to generate **10 sec** audio clips of words "One, Two and Three"
+superimposed over the background noises, along with the "negatives"
+
+
+
+
+
+
 
 
 <intro>
