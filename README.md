@@ -31,6 +31,19 @@ All these sounds will be combined in various proportions to generate **10 sec** 
 superimposed over the background noises, along with the "negatives"
 
 
+Concurrently, an array of labels will be generated, with each label being a one-hot encoded vector :
+
+```
+[1.0, 0.0, 0.0, 0.0] => "One"
+[0.0, 1.0, 0.0, 0.0] => "Two"
+[0.0, 0.0, 1.0, 0.0] => "Three"
+[0.0, 0.0, 0.0, 1.0] => "negative"
+```
+
+
+
+
+
 
 
 
