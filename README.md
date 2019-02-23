@@ -31,7 +31,7 @@ All these sounds will be combined in various proportions to generate **10 sec** 
 superimposed over the background noises, along with the "negatives"
 
 
-Concurrently, an array of labels will be generated, with each label being a one-hot encoded vector :
+Concurrently, an array of labels will be generated, with each label being a one-hot encoded vector, like so:
 
 ```
 [1.0, 0.0, 0.0, 0.0] => "One"
@@ -39,6 +39,14 @@ Concurrently, an array of labels will be generated, with each label being a one-
 [0.0, 0.0, 1.0, 0.0] => "Three"
 [0.0, 0.0, 0.0, 1.0] => "negative"
 ```
+
+The 10 sec audio clips generated will be in ".wav" format. The WAV is a [**bitstream format**](https://en.wikipedia.org/wiki/Bitstream_format). Loosely speaking, it contains time indexed chunks of silent and noisy patches to make up the audio file. Although the WAV file can be fed into a neural network as is, the network learns much better representations if spectrograms are used.
+
+## Spectrograms:
+
+Any time varying signal can be broken down into its frequency components, by **Spectral decomposition** 
+
+Formally, for any time varying function f(t):
 
 
 
