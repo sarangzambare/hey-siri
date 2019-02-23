@@ -1,27 +1,4 @@
 
-# coding: utf-8
-
-# ## Trigger Word Detection
-#
-# Welcome to the final programming assignment of this specialization!
-#
-# In this week's videos, you learned about applying deep learning to speech recognition. In this assignment, you will construct a speech dataset and implement an algorithm for trigger word detection (sometimes also called keyword detection, or wakeword detection). Trigger word detection is the technology that allows devices like Amazon Alexa, Google Home, Apple Siri, and Baidu DuerOS to wake up upon hearing a certain word.
-#
-# For this exercise, our trigger word will be "Activate." Every time it hears you say "activate," it will make a "chiming" sound. By the end of this assignment, you will be able to record a clip of yourself talking, and have the algorithm trigger a chime when it detects you saying "activate."
-#
-# After completing this assignment, perhaps you can also extend it to run on your laptop so that every time you say "activate" it starts up your favorite app, or turns on a network connected lamp in your house, or triggers some other event?
-#
-# <img src="images/sound.png" style="width:1000px;height:150px;">
-#
-# In this assignment you will learn to:
-# - Structure a speech recognition project
-# - Synthesize and process audio recordings to create train/dev datasets
-# - Train a trigger word detection model and make predictions
-#
-# Lets get started! Run the following cell to load the package you are going to use.
-#
-
-# In[1]:
 
 import numpy as np
 from pydub import AudioSegment
@@ -126,16 +103,14 @@ def is_overlapping(segment_time, previous_segments):
 
     segment_start, segment_end = segment_time
 
-    ### START CODE HERE ### (≈ 4 line)
-    # Step 1: Initialize overlap as a "False" flag. (≈ 1 line)
+
     overlap = False
 
-    # Step 2: loop over the previous_segments start and end times.
-    # Compare start/end times and set the flag to True if there is an overlap (≈ 3 lines)
+
     for previous_start, previous_end in previous_segments:
         if ((segment_end >= previous_start) and (segment_start <= previous_end)):
             overlap = True
-    ### END CODE HERE ###
+
 
     return overlap
 
@@ -157,21 +132,19 @@ def insert_audio_clip(background, audio_clip, previous_segments):
     # Get the duration of the audio clip in ms
     segment_ms = len(audio_clip)
 
-    ### START CODE HERE ###
-    # Step 1: Use one of the helper functions to pick a random time segment onto which to insert
-    # the new audio clip. (≈ 1 line)
+
     segment_time = get_random_time_segment(len(audio_clip))
 
-    # Step 2: Check if the new segment_time overlaps with one of the previous_segments. If so, keep
+
     # picking new segment_time at random until it doesn't overlap. (≈ 2 lines)
     while is_overlapping(segment_time,previous_segments):
         segment_time = get_random_time_segment(len(audio_clip))
 
-    # Step 3: Add the new segment_time to the list of previous_segments (≈ 1 line)
-    previous_segments.append(segment_time)
-    ### END CODE HERE ###
 
-    # Step 4: Superpose audio segment and background
+    previous_segments.append(segment_time)
+
+
+    # Superpose audio segment and background
     new_background = background.overlay(audio_clip, position = segment_time[0])
 
     return new_background, segment_time
@@ -196,8 +169,8 @@ def insert_ones(y, segment_end_ms, label):
     # duration of the background (in terms of spectrogram time-steps)
     segment_end_y = int(segment_end_ms * Ty / 10000.0)
 
-    # Add 1 to the correct index in the background label (y)
-    ### START CODE HERE ### (≈ 3 lines)
+
+
     for i in range(segment_end_y+1, segment_end_y + 51):
         if i < Ty:
             if(label == 'one'):
@@ -208,8 +181,7 @@ def insert_ones(y, segment_end_ms, label):
                 y[2,i] = 1
             elif(label == 'negative'):
                 y[3,i] = 1
-#    y[0][segment_end_y:segment_end_y+50] = 1
-    ### END CODE HERE ###
+
 
     return y
 
@@ -230,21 +202,20 @@ def create_single_training_example(background, ones, twos, threes, negatives, su
     y -- the label at each time step of the spectrogram
     """
 
-    # Set the random seed
+
 
 
     # Make background quieter
     background = background - 20
 
-    ### START CODE HERE ###
-    # Step 1: Initialize y (label vector) of zeros (≈ 1 line)
+
     y = np.zeros((4, Ty))
 
-    # Step 2: Initialize segment times as empty list (≈ 1 line)
-    previous_segments = []
-    ### END CODE HERE ###
 
-    # Select 0-4 random "activate" audio clips from the entire list of "activates" recordings
+    previous_segments = []
+
+
+
     number_of_ones = np.random.randint(0, 2)
     number_of_twos = np.random.randint(0, 2)
     number_of_threes = np.random.randint(0, 2)
@@ -255,8 +226,7 @@ def create_single_training_example(background, ones, twos, threes, negatives, su
     random_twos = [twos[i] for i in random_indices_two]
     random_threes = [threes[i] for i in random_indices_three]
 
-    ### START CODE HERE ### (≈ 3 lines)
-    # Step 3: Loop over randomly selected "activate" clips and insert in background
+
     for random_one in random_ones:
         # Insert the audio clip on the background
         background, segment_time = insert_audio_clip(background, random_one, previous_segments)
@@ -278,35 +248,31 @@ def create_single_training_example(background, ones, twos, threes, negatives, su
         segment_start, segment_end = segment_time
         # Insert labels in "y"
         y = insert_ones(y, segment_end_ms=segment_end,label='three')
-    ### END CODE HERE ###
 
-    # Select 0-2 random negatives audio recordings from the entire list of "negatives" recordings
+
+
     number_of_negatives = np.random.randint(0, 2)
     random_indices_negative = np.random.randint(1561, size=number_of_negatives) #len(negatives) = 1561
     random_negatives = [negatives[i] for i in random_indices_negative]
 
-    ### START CODE HERE ### (≈ 2 lines)
-    # Step 4: Loop over randomly selected negative clips and insert in background
+
     for random_negative in random_negatives:
         # Insert the audio clip on the background
         background, segment_time = insert_audio_clip(background, random_negative, previous_segments)
         segment_start, segment_end = segment_time
         y = insert_ones(y, segment_end_ms=segment_end,label='negative')
-    ### END CODE HERE ###
+
 
     # Standardize the volume of the audio clip
     background = match_target_amplitude(background, -20.0)
 
     # Export new training example
     file_handle = background.export("train_dir/train" + suffix + ".wav", format="wav")
-    #print("File (train.wav) was saved in your directory.")
 
-    # Get and plot spectrogram of the new recording (background with superposition of positive and negatives)
-    #x = graph_spectrogram("train.wav")
 
     return y
 
-Ty = 1375 # The number of time steps in the output of our model
+Ty = 1375 # The number of time steps in the output of the model
 
 
 def generate_training_set(backgrounds,ones,twos,threes,negatives,num_train=1000,num_test=100):
@@ -331,11 +297,3 @@ def generate_training_set(backgrounds,ones,twos,threes,negatives,num_train=1000,
 
 
 generate_training_set(backgrounds,ones,twos,threes,negatives)
-
-
-######################################################################
-
-
-
-
-Tx = 5511 # The number of time steps input to the model from the spectrogra
