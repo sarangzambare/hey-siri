@@ -63,29 +63,6 @@ For example, a harp clip taken from [Chrome Music Lab: Spectrograms](https://mus
 where the y-axis is the frequency and x-axis is time, and the colour represents the amplitude.
 
 
+In our case, each audio clip is 10 sec long. In this program, I used **pydub** to input audio files, with a sampling rate of **200Hz**, which means there will be 1 sample for every 5ms, making it about **2000 samples**. If we plot the spectrogram of a sample training file ("train.wav" file in root directory), it looks like :
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<intro>
-
-
-
-
-
-<spectrogram>
-
-<backward looking vs forward looking/ why uni-directional LSTMs>
-
-<convolution for >
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/train.png)
