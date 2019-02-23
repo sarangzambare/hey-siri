@@ -47,9 +47,17 @@ The 10 sec audio clips generated will be in ".wav" format. The WAV is a [**bitst
 Any time varying signal can be broken down into its frequency components, by **fourier decomposition**, which
 is the idea that any signal can be expressed as the sum of sinusoids with different frequencies.
 
-Formally, for any sound, spectral decomposition gives us the amplitudes of each of its frequency components. For example, a section of a violin being played can be broken down like so:
+For any sound, spectral decomposition gives us the amplitudes of each of its frequency components. For example, a section of a violin being played can be broken down like so:
 
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/violin.png)
+
+If such a decomposition is done at every time step of the audio signal and plotted, what results is a spectrogram.
+
+For example, a harp clip taken from [Chrome Music Lab: Spectrograms](https://musiclab.chromeexperiments.com/Spectrogram/), looks like so:
+
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/harp.png)
+
+
 
 
 
