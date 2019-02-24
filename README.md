@@ -76,11 +76,16 @@ To train the model, we need to label the training data according to the utteranc
 2. Insert label vectors which have a length of 4 right after the segment ends
 3. Repeat the label for a fixed amount of time steps (in this program: 50). This is done to give the network some time to process the input before giving out the labels. A label which is only a single time step wide might not allow enough time for this.
 
-For example, if you ignore the repeating of labels for illustration purposes, the training sample audio clip will be labelled as follows :
+For example, if you ignore the repeating of labels for illustration purposes, the training sample audio clip will be labelled as follows : (give it a listen)
 
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/label_coding.png)
 
+A point to keep in mind is that the input time steps and output time steps might be different depending on the neural network architecture you use. Therefore, the output label time segments must be scaled accordingly.
 
 ## Model
 
-For the purpose of detecting the utterances of the three words in the audio signal, we have
+In this program, I used a combination of **1D convolution** and **GRUs**, with intermittent dropout layers. It has :
+
+1. Input which has **1998** time steps, followed by..
+2. 1D Convolution layer, which shrinks the time steps to **1375**, followed by...
+3. 
