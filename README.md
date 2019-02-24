@@ -108,3 +108,5 @@ Here is a detailed illustration of the model :
 
 
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/model.png)
+
+Note: the output values of the network are just for illustration purposes. This diagram was drawn using [draw.io](draw.io), its a cool tool and can be used to draw vector graphics.
