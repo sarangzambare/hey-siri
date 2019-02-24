@@ -107,7 +107,7 @@ In this program, I used a combination of **1D convolution** and **GRUs**, with i
 
 The 1375 time steps coming from the convolutional layer are then fed into a recurrent layer, which contains :
 
-1. Batch Normalization layer
+1. Batch Normalization laye
 2. ReLu Activation layers
 3. Dropout layer with a dropout of **0.8**
 4. GRU layer, with 128 hidden units
