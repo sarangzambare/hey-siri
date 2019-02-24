@@ -66,3 +66,21 @@ where the y-axis is the frequency and x-axis is time, and the colour represents 
 In our case, each audio clip is 10 sec long. In this program, I used **pydub** to input audio files, with a sampling rate of **200Hz**, which means there will be 1 sample for every 5ms, making it about **2000 samples**. If we plot the spectrogram of a sample training file ("train.wav" file in root directory), it looks like :
 
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/train_2.png)
+
+
+## Labelling :
+
+To train the model, we need to label the training data according to the utterances of the three words in the audio clips. Also, we want to detect time instances immediately after the words are uttered. To achieve this, the labelling process has the following steps :
+
+1. Get time segments where the target words (including negatives) are placed.
+2. Insert label vectors which have a length of 4 right after the segment ends
+3. Repeat the label for a fixed amount of time steps (in this program: 50). This is done to give the network some time to process the input before giving out the labels. A label which is only a single time step wide might not allow enough time for this.
+
+For example, if you ignore the repeating of labels for illustration purposes, the training sample audio clip will be labelled as follows :
+
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/label_coding.png)
+
+
+## Model
+
+For the purpose of detecting the utterances of the three words in the audio signal, we have
