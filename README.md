@@ -110,3 +110,43 @@ Here is a detailed illustration of the model :
 ![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/model.png)
 
 Note: the output values of the network are just for illustration purposes. This diagram was drawn using [draw.io](draw.io), its a cool tool and can be used to draw vector graphics.
+
+tensor-flow summary of the model :
+
+```
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         (None, 1998, 101)         0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 1375, 196)         12352900  
+_________________________________________________________________
+batch_normalization_1 (Batch (None, 1375, 196)         784       
+_________________________________________________________________
+activation_1 (Activation)    (None, 1375, 196)         0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 1375, 196)         0         
+_________________________________________________________________
+gru_1 (GRU)                  (None, 1375, 128)         124800    
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 1375, 128)         0         
+_________________________________________________________________
+batch_normalization_2 (Batch (None, 1375, 128)         512       
+_________________________________________________________________
+gru_2 (GRU)                  (None, 1375, 128)         98688     
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 1375, 128)         0         
+_________________________________________________________________
+batch_normalization_3 (Batch (None, 1375, 128)         512       
+_________________________________________________________________
+dropout_4 (Dropout)          (None, 1375, 128)         0         
+_________________________________________________________________
+time_distributed_1 (TimeDist (None, 1375, 4)           516       
+=================================================================
+Total params: 12,578,712
+Trainable params: 12,577,808
+Non-trainable params: 904
+_________________________________________________________________
+```
+
+Notice that there are a lot of Dropout layers. This is because the 1375 time steps that I am using to input in the recurrent layer is considerably small representation, and the model tends to overfit really quickly without dropout. Usually the number of dropout operations is decided on a very trial and error based approach.
