@@ -94,7 +94,7 @@ All the methods used to generate the dataset are in the ***audio_data.py*** modu
 * **100 indexed audio clips, 10 sec long**
 * **100 indexed labels, each of shape (1375,4)**
 
-
+Note: You can easily generate more training and testing examples by setting the num_train and num_test variables in the audio_data.py file.
 
 ## Model
 
@@ -166,3 +166,15 @@ _________________________________________________________________
 ```
 
 Notice that there are a lot of Dropout layers. This is because the 1375 time steps that I am using to input in the recurrent layer is a considerably small representation-space, and the model tends to overfit really quickly without dropout. Usually the number of dropout operations is decided on a very trial and error based approach.
+
+Finally, I used the Adam optimizer with custom parameters, with ***categorical_crossentropy*** as the loss function.
+
+```
+opt = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, decay=0.01)
+model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=["accuracy"])
+
+```
+
+After training it for 100 epochs, with a batch_size of 5, the model achieves an accuracy of **95%**
+
+**Note: 95% does not mean anything in this case. Even if the model were to output all zeros, it would still count as about 90% accuracy because of the way the problem is set up.**
