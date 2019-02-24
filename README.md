@@ -103,4 +103,8 @@ The 1375 time steps coming from the convolutional layer are then fed into a recu
 10. Dropout(0.8)
 11. Dense layer with sigmoid activation as output.
 
- 
+
+Here is a detailed illustration of the model :
+
+
+![alt text](https://raw.githubusercontent.com/sarangzambare/audio-trigger/master/png/model.png)
