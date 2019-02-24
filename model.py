@@ -90,13 +90,13 @@ model = model(input_shape = (sample_n, freq_n))
 model.summary()
 
 opt = Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, decay=0.01)
-model.compile(loss='binary_crossentropy', optimizer=opt, metrics=["accuracy"])
+model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=["accuracy"])
 
 model.fit(X, Y, batch_size = 5, epochs=10)
 
 model.save("audio_wake_model.h5")
 
-# loss, acc = model.evaluate(X_dev, Y_dev)
+# loss, acc = model.evaluate(X_test, Y_test)
 # print("Dev set accuracy = ", acc)
 #
 #
