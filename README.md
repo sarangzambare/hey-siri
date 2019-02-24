@@ -1,4 +1,4 @@
-# audio-trigger
+# wake-word detecton in audio clips
 
 ### Under Construction
 
@@ -82,7 +82,23 @@ For example, if you ignore the repeating of labels for illustration purposes, th
 
 A point to keep in mind is that the input time steps and output time steps might be different depending on the neural network architecture you use. Therefore, the output label time segments must be scaled accordingly.
 
+### dataset summary :
+
+All the methods used to generate the dataset are in the ***audio_data.py*** module. The entire dataset exists in the ***train_dir*** directory, along with test cases. The dataset consists of :
+
+#### training-set:
+* **1000 indexed audio clips, 10 sec long, with various background sounds and negative words**
+* **1000 indexed labels in the form of a npy file, each label has the shape = (1375,4)**
+
+#### test-set
+* **100 indexed audio clips, 10 sec long
+* **100 indexed labels, each of shape (1375,4)
+
+
+
 ## Model
+
+
 
 In this program, I used a combination of **1D convolution** and **GRUs**, with intermittent dropout layers. It has two components, the input layer, which consists of:
 
