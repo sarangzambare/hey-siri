@@ -84,8 +84,23 @@ A point to keep in mind is that the input time steps and output time steps might
 
 ## Model
 
-In this program, I used a combination of **1D convolution** and **GRUs**, with intermittent dropout layers. It has :
+In this program, I used a combination of **1D convolution** and **GRUs**, with intermittent dropout layers. It has two components, the input layer, which consists of:
 
 1. Input which has **1998** time steps, followed by..
-2. 1D Convolution layer, which shrinks the time steps to **1375**, followed by...
-3. 
+2. 1D Convolution layer, which shrinks the time steps to **1375**
+
+The 1375 time steps coming from the convolutional layer are then fed into a recurrent layer, which contains :
+
+1. Batch Normalization layer
+2. ReLu Activation layers
+3. Dropout layer with a dropout of **0.8**
+4. GRU layer, with 128 hidden units
+5. Dropout(0.8)
+6. Batch Normalization
+7. GRY layer, with 128 hidden units
+8. Dropout(0.8)
+9. Batch Normalization
+10. Dropout(0.8)
+11. Dense layer with sigmoid activation as output.
+
+ 
