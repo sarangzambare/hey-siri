@@ -149,4 +149,4 @@ Non-trainable params: 904
 _________________________________________________________________
 ```
 
-Notice that there are a lot of Dropout layers. This is because the 1375 time steps that I am using to input in the recurrent layer is considerably small representation, and the model tends to overfit really quickly without dropout. Usually the number of dropout operations is decided on a very trial and error based approach.
+Notice that there are a lot of Dropout layers. This is because the 1375 time steps that I am using to input in the recurrent layer is a considerably small representation-space, and the model tends to overfit really quickly without dropout. Usually the number of dropout operations is decided on a very trial and error based approach.
