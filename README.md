@@ -1,6 +1,6 @@
 # wake-word detecton in audio clips
 
-### Under Construction
+### Author: Sarang Zambare
 
 
 This repository is for trigger-word detection/ digit recognition in speech using recurrent neural networks
